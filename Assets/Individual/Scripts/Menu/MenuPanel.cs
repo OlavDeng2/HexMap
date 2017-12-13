@@ -5,18 +5,21 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(RectTransform))]
-public class MenuPanel : MonoBehaviour {
+public class MenuPanel : MonoBehaviour
+{
     public Selectable firstSelected;
     public Button startEvent;
     public Button backEvent;
 
-    void OnEnable() {
-        if (firstSelected) {
+    void OnEnable()
+    {
+        if (firstSelected)
+        {
             StartCoroutine(SelectTask());
         }
     }
 
-	/*
+    /*
     void Update() {
         if (startEvent) {
             if (InputManager.GetButtonDown(InputDevice.AnyController, InputButton.Start)) {
@@ -32,7 +35,8 @@ public class MenuPanel : MonoBehaviour {
     }
 	*/
 
-    IEnumerator SelectTask() {
+    IEnumerator SelectTask()
+    {
         yield return null;
         EventSystem.current.SetSelectedGameObject(firstSelected.gameObject);
     }

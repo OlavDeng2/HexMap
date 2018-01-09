@@ -18,6 +18,14 @@ public class HexMap : MonoBehaviour {
     public Material matPlains;
     public Material matMountain;
 
+    //Tiles with height above this will be a mountain
+    public float mountainHeight = 0.85f;
+    public float hillHeight = 0.6f;
+    public float flatHeight = 0.0f;
+
+    //skipping this value for now
+    //public float waterHeight = -0.5f; 
+
     //The size of our map
     public int rowCount = 30;
     public int columnCount = 60;
@@ -103,9 +111,11 @@ public class HexMap : MonoBehaviour {
                 hexGo.GetComponent<HexBehaviour>().HexMap = this;
 
                 //Assign the coordinates of the hex
-                hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
+                //hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
-
+                //Destroy(for now at least) the textmesh if the coordinates is not desirable
+                TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
+                Destroy(textMesh);
             }
         }
 
@@ -130,10 +140,26 @@ public class HexMap : MonoBehaviour {
                 MeshRenderer mr = hexGo.GetComponentInChildren<MeshRenderer>();
 
 
-                if (h.elevation >= 0)
+                if (h.elevation >= mountainHeight)
+                {
+                    mr.material = matMountain;
+                }
+
+
+                //Commented out since we dont have any hills, yet.
+                /*
+                else if (h.elevation >= hillHeight)
+                {
+                    //dont have a hill yet so uses plains for now
+                    mr.material = matPlains;
+                }
+                */
+
+                else if (h.elevation >= flatHeight)
                 {
                     mr.material = matGrasslands;
                 }
+
 
                 else
                 {

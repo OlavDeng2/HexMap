@@ -5,6 +5,17 @@ using UnityEngine;
 
 //Defines grid position, size and neighbors and other potential information of a hex tile
 public class Hex {
+    //constructor
+    public Hex(int q, int r)
+    {
+        // Q + R + S = 0
+        //Therefore S = -(Q + R)
+        this.Q = q;
+        this.R = r;
+        this.S = -(q + r);
+    }
+
+
     public readonly int Q; //q for collumn
     public readonly int R; //r for row
     public readonly int S;
@@ -14,24 +25,15 @@ public class Hex {
     public float elevation;
     public float moisture;
 
-
-    float radius = 1f;
-
-    //TODO: link up with HexMaps class of this
-
+    //link this up with Hexmap later
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;
 
+    float radius = 1f;
+   
+
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
-    public Hex(int q, int r)
-    {
-        // Q + R + S = 0
-        //Therefore S = -(Q + R)
-        this.Q = q;
-        this.R = r;
-        this.S = -(q + r);
-    }
 
     //Returns the world space position of the hex
     public Vector3 Position()
@@ -118,5 +120,13 @@ public class Hex {
         return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
     }
 
+    public static float DistanceWrapEastWest(Hex a, Hex b, int columnCount)
+    {
+        int dQ = Mathf.Abs(a.Q - b.Q);
+        if(dQ > columnCount/2)
+            dQ = columnCount - dQ;
+
+        return Mathf.Max(dQ, Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
+    }
 
 }

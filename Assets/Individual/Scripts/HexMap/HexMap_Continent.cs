@@ -11,7 +11,13 @@ public class HexMap_Continent : HexMap {
         base.GenerateMap();
 
         int numContinents = 2;
-        int continentSpacing = 20;
+
+        //divide column count with number of continents to get "equal" distrobution of continents
+        int continentSpacing = columnCount/numContinents;
+
+        //setting seed to 0 so as to be able to better reproduse for testing, comment out or in for testing purposes.
+        //Random.InitState(0);
+
         for(int c= 0; c <numContinents; c++)
         {
             //Make raised area
@@ -29,7 +35,27 @@ public class HexMap_Continent : HexMap {
 
 
         //add lumpiness to the area
+        float noiseResolution = 0.1f;
 
+        //add some randomization for the Perlin noise to make the map generation more "natural", needs more taking look at to work properly and nicely
+        Vector2 noiseOffset = new Vector2(0, 0);
+        //Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+
+        float noiseScale = 2f; //larger value = more islands and lakes
+
+
+        for (int column = 0; column < columnCount; column++)
+        {
+            for (int row = 0; row < rowCount; row++)
+            {
+                Hex h = GetHexAt(column, row);
+                float noise = Mathf.PerlinNoise(((float)column / Mathf.Max(columnCount, rowCount) / noiseResolution) + noiseOffset.x, ((float)row /Mathf.Max(columnCount, rowCount) / noiseResolution)) + noiseOffset.y - 0.5f;
+                h.elevation += noise * noiseScale;
+
+            }
+        }
+        
         //Set mesh to mountain/hill/flatt/water based on height
 
         //Simulate rainfall/moisture and set plains/gresslands + forest
@@ -38,7 +64,7 @@ public class HexMap_Continent : HexMap {
         UpdateHexVisuals();
     }
 
-    void ElevateArea(int q, int r, int range, float centerHeight = 1f)
+    void ElevateArea(int q, int r, int range, float centerHeight = 0.8f)
     {
         //get the hex and elevate the hexes
         Hex centerHex = GetHexAt(q, r);
@@ -50,7 +76,7 @@ public class HexMap_Continent : HexMap {
         {
             //if (h.elevation < 0)
             //    h.elevation = 0;
-            h.elevation += centerHeight * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, h)/range);
+            h.elevation = centerHeight * Mathf.Lerp(1f, 0.25f, Mathf.Pow(Hex.Distance(centerHex, h)/range, 2));
         }
     }
 

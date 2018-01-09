@@ -10,8 +10,15 @@ public class Hex {
     public readonly int S;
 
 
+    //extra data for potential future use in map generation
+    public float elevation;
+    public float moisture;
+
 
     float radius = 1f;
+
+    //TODO: link up with HexMaps class of this
+
     bool allowWrapEastWest = true;
     bool allowWrapNorthSouth = false;
 
@@ -104,4 +111,12 @@ public class Hex {
         }
         return position;
     }
+
+    public static float Distance(Hex a, Hex b)
+    {
+        //FIXME: Wrapping
+        return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
+    }
+
+
 }

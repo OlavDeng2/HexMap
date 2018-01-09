@@ -223,6 +223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a87290c92cf07946974f9ad653271a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  qualityDropdown: {fileID: 0}
+  resolutionDropdown: {fileID: 0}
+  fullscreenToggle: {fileID: 0}
 --- !u!114 &51109832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -735,6 +738,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6c0f3cfbf186a44bb7ee4e95ae909c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 0}
+  startEvent: {fileID: 0}
+  backEvent: {fileID: 0}
 --- !u!114 &628886277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1503,6 +1509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca6c0f3cfbf186a44bb7ee4e95ae909c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstSelected: {fileID: 0}
+  startEvent: {fileID: 0}
+  backEvent: {fileID: 0}
 --- !u!114 &1106332475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1637,14 +1646,14 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 51109831}
-        m_MethodName: StartServer
-        m_Mode: 1
+        m_MethodName: LoadLevel
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Game
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,

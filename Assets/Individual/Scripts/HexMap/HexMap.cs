@@ -19,7 +19,7 @@ public class HexMap : MonoBehaviour {
     public Material matMountain;
 
     //Tiles with height above this will be a mountain
-    public float mountainHeight = 0.85f;
+    public float mountainHeight = 0.95f;
     public float hillHeight = 0.6f;
     public float flatHeight = 0.0f;
 

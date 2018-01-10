@@ -6,33 +6,42 @@ public class HexMap : MonoBehaviour {
 
     public GameObject HexPrefab;
 
+    [Header("Tile Meshes")]
     //Meshes for our different tiles
     public Mesh meshWater;
     public Mesh meshFlat;
     public Mesh meshHill;
     public Mesh meshMountain;
 
+
+    [Header("Tile Materials")]
     //Materials for our different tiles
     public Material matOcean;
     public Material matGrasslands;
-    public Material matPlains;
+    public Material matDessert;
     public Material matMountain;
 
-    //Tiles with height above this will be a mountain
+    [Header("Tile Heights")]
+    //Tiles with height above this will be a mountain, hill or flatland
     public float mountainHeight = 0.95f;
     public float hillHeight = 0.6f;
     public float flatHeight = 0.0f;
 
-    //skipping this value for now
-    //public float waterHeight = -0.5f; 
+    [Header("Tile Moistures")]
+    //tiles with this moisture will be forrest, grasslands or dessert
+    public float forrestMoisture = 1f;
+    public float grasslandMoisture = 0.5f;
+    public float dessertMoisture = 0f;
 
+    [Header("Map Size")]
     //The size of our map
     public int rowCount = 30;
     public int columnCount = 60;
 
+    [Header("Allow wrapping for map navigation")]
     //TODO: link up with hex class
-    bool allowWrapEastWest = true;
-    bool allowWrapNorthSouth = false;
+    public bool allowWrapEastWest = true;
+    public bool allowWrapNorthSouth = false;
 
     //Create a 2d array for our hexes
     private Hex[,] hexes;
@@ -91,7 +100,7 @@ public class HexMap : MonoBehaviour {
             for (int row = 0; row < rowCount; row++)
             {                
                 //Create the hex
-                Hex h = new Hex(column, row);
+                Hex h = new Hex(this, column, row);
                 h.elevation = -0.5f;
 
                 //place the hex in the 2d array
@@ -110,12 +119,14 @@ public class HexMap : MonoBehaviour {
                 hexGo.GetComponent<HexBehaviour>().Hex = h;
                 hexGo.GetComponent<HexBehaviour>().HexMap = this;
 
+
+
                 //Assign the coordinates of the hex
-                //hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
+                hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
                 //Destroy(for now at least) the textmesh if the coordinates is not desirable
-                TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
-                Destroy(textMesh);
+                //TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
+                //Destroy(textMesh);
             }
         }
 
@@ -140,32 +151,44 @@ public class HexMap : MonoBehaviour {
                 MeshRenderer mr = hexGo.GetComponentInChildren<MeshRenderer>();
 
 
+                //Set the elevation for mountain, hills, flatlands and ocean. In future have models instead of tile colours to represent the different heights
                 if (h.elevation >= mountainHeight)
                 {
                     mr.material = matMountain;
                 }
-
-
-                //Commented out since we dont have any hills, yet.
-                /*
                 else if (h.elevation >= hillHeight)
                 {
-                    //dont have a hill yet so uses plains for now
-                    mr.material = matPlains;
+                    //dont have a hill yet so uses grasslands for now
+                    mr.material = matGrasslands;
                 }
-                */
-
                 else if (h.elevation >= flatHeight)
                 {
                     mr.material = matGrasslands;
                 }
-
-
                 else
                 {
                     mr.material = matOcean;
                 }
 
+
+                //Set the correct tile for different moistures, not most efficient way to do this but whatever.
+                if (h.moisture >= forrestMoisture)
+                {
+                    mr.material = matMountain;
+                }
+                else if (h.moisture >= grasslandMoisture)
+                {
+                    //dont have a hill yet so uses grasslands for now
+                    mr.material = matGrasslands;
+                }
+                else if (h.moisture >= dessertMoisture)
+                {
+                    mr.material = matGrasslands;
+                }
+                else
+                {
+                    mr.material = matOcean;
+                }
 
                 //get the mesh for the ocean(water)
                 MeshFilter mf = hexGo.GetComponentInChildren<MeshFilter>();

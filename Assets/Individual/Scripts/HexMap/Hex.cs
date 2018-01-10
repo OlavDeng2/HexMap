@@ -6,8 +6,9 @@ using UnityEngine;
 //Defines grid position, size and neighbors and other potential information of a hex tile
 public class Hex {
     //constructor
-    public Hex(int q, int r)
+    public Hex(HexMap hexMap, int q, int r)
     {
+        this.hexMap = hexMap; 
         // Q + R + S = 0
         //Therefore S = -(Q + R)
         this.Q = q;
@@ -25,9 +26,8 @@ public class Hex {
     public float elevation;
     public float moisture;
 
-    //link this up with Hexmap later
-    bool allowWrapEastWest = true;
-    bool allowWrapNorthSouth = false;
+    private HexMap hexMap;
+
 
     float radius = 1f;
    
@@ -76,7 +76,7 @@ public class Hex {
         Vector3 position = Position();
 
         
-        if (allowWrapEastWest)
+        if (hexMap.allowWrapEastWest)
         {
             float howManyWidthsFromCamera = (position.x - cameraPosition.x) / mapWidth;
 
@@ -94,7 +94,7 @@ public class Hex {
             position.x -= howManyWidthsOff * mapWidth;
         }
 
-        if (allowWrapNorthSouth)
+        if (hexMap.allowWrapNorthSouth)
         {
             float howManyHeightsFromCamera = (position.z - cameraPosition.z) / mapHeight;
 
@@ -116,17 +116,24 @@ public class Hex {
 
     public static float Distance(Hex a, Hex b)
     {
-        //FIXME: Wrapping
-        return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
-    }
 
-    public static float DistanceWrapEastWest(Hex a, Hex b, int columnCount)
-    {
+        //Probably wrong for wrapping
         int dQ = Mathf.Abs(a.Q - b.Q);
-        if(dQ > columnCount/2)
-            dQ = columnCount - dQ;
+        if (a.hexMap.allowWrapEastWest)
+        {
+            if (dQ > a.hexMap.columnCount / 2)
+                dQ = a.hexMap.columnCount - dQ;
+        }
 
-        return Mathf.Max(dQ, Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
+        int dR = Mathf.Abs(a.R - b.R);
+        if (a.hexMap.allowWrapNorthSouth)
+        {
+            if (dR > a.hexMap.rowCount / 2)
+                dR = a.hexMap.rowCount - dR;
+        }
+
+        //FIXME: Wrapping
+        //return Mathf.Max(Mathf.Abs(a.Q - b.Q), Mathf.Abs(a.R - b.R), Mathf.Abs(a.S - b.S));
+        return Mathf.Max(dQ, dR, Mathf.Abs(a.S - b.S));
     }
-
 }

@@ -41,9 +41,7 @@ public class HexMap_Continent : HexMap {
         Vector2 noiseOffset = new Vector2(0, 0);
         //Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
 
-
         float noiseScale = 2f; //larger value = more islands and lakes
-
 
         for (int column = 0; column < columnCount; column++)
         {
@@ -55,7 +53,30 @@ public class HexMap_Continent : HexMap {
 
             }
         }
-        
+
+
+        //TODO: Write code to add moisture
+
+        //add some randomness to the moisture
+        float moistureResolution = 0.1f;
+
+        //add some randomization for the Perlin noise to make the map generation more "natural", needs more taking look at to work properly and nicely
+        Vector2 moistureOffset = new Vector2(0, 0);
+        //Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        float moistureScale = 2f; //larger value = more islands and lakes
+
+        for (int column = 0; column < columnCount; column++)
+        {
+            for (int row = 0; row < rowCount; row++)
+            {
+                Hex h = GetHexAt(column, row);
+                float moisture = Mathf.PerlinNoise(((float)column / Mathf.Max(columnCount, rowCount) / moistureResolution) + moistureOffset.x, ((float)row / Mathf.Max(columnCount, rowCount) / moistureResolution)) + moistureOffset.y - 0.5f;
+                h.moisture += moisture * moistureScale;
+
+            }
+        }
+
         //Set mesh to mountain/hill/flatt/water based on height
 
         //Simulate rainfall/moisture and set plains/gresslands + forest

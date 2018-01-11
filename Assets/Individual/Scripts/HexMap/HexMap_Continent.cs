@@ -16,6 +16,7 @@ public class HexMap_Continent : HexMap {
         //Generate the map
         GenerateContinents();
         GenerateMoisture();
+        GenerateTemperature();
 
         //Update the visuals of the map
         UpdateHexVisuals();
@@ -87,9 +88,7 @@ public class HexMap_Continent : HexMap {
                 //TODO: Improve the algorithm for generating dessert, grassland and forrest as it is highly based on elevation right now
 
                 //create basic strip of dessert, grasslands and forrests to form our base.
-                //TODO: if possible, simplify the formula to get the lerpscale. Seems unnecesarrily complex right now(but functional)
-                float lerpScale = (((Mathf.Abs(row - (Mathf.Abs((float)rowCount / 2f - (float)rowCount)))/100f) * (float)rowCount)*2)/10-1; //lerpscale = 1 means dessert, =0 means forrest
-                lerpScale = Mathf.Abs(lerpScale);
+                float lerpScale = Mathf.Abs((Mathf.Abs(row - (rowCount - (rowCount / 2f))))/(rowCount/2)-1); //lerpscale = 1 means dessert, =0 means forrest
 
                 //Generate the initial moisture
                 h.moisture = Mathf.Lerp(1f, 0f, lerpScale);
@@ -114,8 +113,7 @@ public class HexMap_Continent : HexMap {
                 Hex h = GetHexAt(column, row);
 
                 //create basic strips of temperatures to form our base.
-                //TODO: if possible, simplify the formula to get the lerpscale. Seems unnecesarrily complex right now(but functional)
-                float lerpScale = (((Mathf.Abs(row - (Mathf.Abs((float)rowCount / 2f - (float)rowCount))) / 100f) * (float)rowCount) * 2) / 10 - 1; //lerpscale = 1 means dessert, =0 means forrest
+                float lerpScale = Mathf.Abs((Mathf.Abs(row - (rowCount - (rowCount / 2f)))) / (rowCount / 2) - 1); //lerpscale.
                 lerpScale = Mathf.Abs(lerpScale);
 
                 //Generate the initial temperature

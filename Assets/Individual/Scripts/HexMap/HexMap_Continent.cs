@@ -48,9 +48,7 @@ public class HexMap_Continent : HexMap {
         float noiseResolution = 0.1f;
 
         //add some randomization for the Perlin noise to make the map generation more "natural"
-        //TOD: Actually setup the noiseOffset to create randomness in landmasses, does not work well right now
-        Vector2 noiseOffset = new Vector2(0, 0);
-        //Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f ), Random.Range(0f, 1f));
+        Vector2 noiseOffset = new Vector2(Random.Range(-0.1f, 0.1f ), Random.Range(-0.1f, 0.1f));
 
         float noiseScale = 2f; //larger value = more islands and lakes
 
@@ -72,11 +70,9 @@ public class HexMap_Continent : HexMap {
         float noiseResolution = 0.1f;
 
         //add some randomization for the Perlin noise to make the map generation more "natural"
-        //TOD: Actually setup the moistureOffset to create randomness in the moisture, does not work well right now
-        Vector2 noiseOffset = new Vector2(0, 0);
-        //Vector2 moistureOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+        Vector2 noiseOffset = new Vector2(Random.Range(-0.25f, 0.25f), Random.Range(-0.25f, 0.25f));
 
-        float moistureScale = 0.5f; //larger value = more forrests, lower value = more dessert
+        float noiseScale = 0.5f; //larger value = more forrests, lower value = more dessert
 
         //actual loop for adding the moisture to the area
         for (int column = 0; column < columnCount; column++)
@@ -88,14 +84,15 @@ public class HexMap_Continent : HexMap {
                 //TODO: Improve the algorithm for generating dessert, grassland and forrest as it is highly based on elevation right now
 
                 //create basic strip of dessert, grasslands and forrests to form our base.
-                float lerpScale = Mathf.Abs((Mathf.Abs(row - (rowCount - (rowCount / 2f))))/(rowCount/2)-1); //lerpscale = 1 means dessert, =0 means forrest
-
+                float lerpScale = (Mathf.Abs(row - (rowCount / 2f)))/(rowCount/2); //lerpscale = 1 means dessert, =0 means forrest
+                print(lerpScale + " " + row);
+                
                 //Generate the initial moisture
-                h.moisture = Mathf.Lerp(1f, 0f, lerpScale);
+                h.moisture = Mathf.Lerp(0f, 1f, lerpScale);
          
                 //add some randomness to the moisture
                 float moisture = Mathf.PerlinNoise(((float)column / Mathf.Max(columnCount, rowCount) / noiseResolution) + noiseOffset.x, ((float)row / Mathf.Max(columnCount, rowCount) / noiseResolution)) + noiseOffset.y - 0.5f;
-                h.moisture += moisture * moistureScale;
+                h.moisture += moisture * noiseScale;
                 
             }
         }
@@ -113,11 +110,11 @@ public class HexMap_Continent : HexMap {
                 Hex h = GetHexAt(column, row);
 
                 //create basic strips of temperatures to form our base.
-                float lerpScale = Mathf.Abs((Mathf.Abs(row - (rowCount - (rowCount / 2f)))) / (rowCount / 2) - 1); //lerpscale.
+                float lerpScale = (Mathf.Abs(row - rowCount / 2f)) / (rowCount / 2); //lerpscale.
                 lerpScale = Mathf.Abs(lerpScale);
 
                 //Generate the initial temperature
-                h.temperature = Mathf.Lerp(1f, 0f, lerpScale);
+                h.temperature = Mathf.Lerp(0f, 1f, lerpScale);
             }
         }
     }

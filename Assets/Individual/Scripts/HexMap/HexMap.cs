@@ -39,8 +39,7 @@ public class HexMap : MonoBehaviour {
     public int rowCount = 30;
     public int columnCount = 60;
 
-    [Header("Allow wrapping for map navigation")]
-    //TODO: link up with hex class
+    [Header("Map Navigation")]
     public bool allowWrapEastWest = true;
     public bool allowWrapNorthSouth = false;
 
@@ -52,6 +51,7 @@ public class HexMap : MonoBehaviour {
     //Getter for the hex in position passed into function
     public Hex GetHexAt(int x, int y)
     {
+        //return error if no map exists yet
         if(hexes == null)
         {
             Debug.LogError("Hexes array not yet instantiated!");
@@ -74,9 +74,7 @@ public class HexMap : MonoBehaviour {
             {
                 y += rowCount;
             }
-
         }
-
 
         return hexes[x, y];
     }
@@ -95,11 +93,11 @@ public class HexMap : MonoBehaviour {
         hexes = new Hex[columnCount, rowCount];
         hexToGameObjectMap = new Dictionary<Hex, GameObject>();
 
-        //Generate a map filled with ocean
+        //Generate a map filled with ocean, this is the default
         for (int column = 0; column < columnCount; column++)
         {
             for (int row = 0; row < rowCount; row++)
-            {                
+            {
                 //Create the hex
                 Hex h = new Hex(this, column, row);
                 h.elevation = -0.5f;
@@ -120,14 +118,20 @@ public class HexMap : MonoBehaviour {
                 hexGo.GetComponent<HexBehaviour>().Hex = h;
                 hexGo.GetComponent<HexBehaviour>().HexMap = this;
 
+                if (Application.isEditor)
+                {
+                    //Assign the coordinates of the hex
+                    //TODO: Set as debug option when running game itself rather than just check if in editor
+                    hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
+                }
+                else
+                {
+                    //Destroy(for now at least) the textmesh if the coordinates is not desirable
+                    TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
+                    Destroy(textMesh);
+                }
 
-                //Assign the coordinates of the hex
-                //hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
-
-                //Destroy(for now at least) the textmesh if the coordinates is not desirable
-                TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
-                Destroy(textMesh);
             }
         }
 
@@ -136,10 +140,10 @@ public class HexMap : MonoBehaviour {
         //StaticBatchingUtility.Combine(this.gameObject);
     }
 
-
+    //Update the visuals of the tiles
     public void UpdateHexVisuals()
     {
-
+        //loop through the array to set the right materials(and in future, do stuff with mesh)
         for (int column = 0; column < columnCount; column++)
         {
             for (int row = 0; row < rowCount; row++)
@@ -151,8 +155,9 @@ public class HexMap : MonoBehaviour {
                 //get the material for the ocean
                 MeshRenderer mr = hexGo.GetComponentInChildren<MeshRenderer>();
 
-
                 //Set the elevation for mountain, hills, flatlands and ocean. In future have models instead of tile colours to represent the different heights
+                //NOTE: Right now, the moisture generation will potentially over ride the bellow assignments
+                //In future using models for hill, mountain and flat lands will avoid this issue. Out of scope of this project for now however.
                 if (h.elevation >= mountainHeight)
                 {
                     mr.material = matMountain;
@@ -171,7 +176,8 @@ public class HexMap : MonoBehaviour {
                     mr.material = matOcean;
                 }
 
-                //Set the correct tile for different moistures, not most efficient way to do this but whatever.
+                //Set the correct tile for different moistures, not most efficient way to do this due to over riding the previous assignments.
+                //Simple check for mountain height and flat height to ensure that no water tiles or mountain tiles get over written.
                 if (h.elevation >= flatHeight && h.elevation <= mountainHeight)
                 {
                     
@@ -191,14 +197,14 @@ public class HexMap : MonoBehaviour {
                 
                 
 
-                //get the mesh for the ocean(water)
+                //get the mesh for the ocean(water), or in this case, everything
                 MeshFilter mf = hexGo.GetComponentInChildren<MeshFilter>();
                 mf.mesh = meshWater;
-
             }
         }
     }
 
+    //Get the hexes within a certain range
     public Hex[] GetHexesWithinRangeOff(Hex centerHex, int range)
     {
         List<Hex> results = new List<Hex>();

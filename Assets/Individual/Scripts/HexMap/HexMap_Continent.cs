@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HexMap_Continent : HexMap {
-
     [Header("Continent Generator")]
+    //define the amount of continents generated
     public int numContinents = 2;
 
     // Use this for initialization
@@ -13,9 +13,11 @@ public class HexMap_Continent : HexMap {
         //Call the base class to make all hexes
         base.GenerateMap();
 
+        //Generate the map
         GenerateContinents();
         GenerateMoisture();
 
+        //Update the visuals of the map
         UpdateHexVisuals();
     }
 
@@ -25,9 +27,8 @@ public class HexMap_Continent : HexMap {
         //divide column count with number of continents to get "equal" distrobution of continents
         int continentSpacing = columnCount / numContinents;
 
-        //setting seed to 0 so as to be able to better reproduse for testing, comment out or in for testing purposes.
-        //Random.InitState(0);
-
+        //Generate the random landmasses
+        //TODO: Make the amount of landmasses and size of landmasses based on map size and/or player settings
         for (int c = 0; c < numContinents; c++)
         {
             //Make raised area
@@ -40,19 +41,19 @@ public class HexMap_Continent : HexMap {
 
                 ElevateArea(x, y, range);
             }
-
         }
 
-
-        //add lumpiness to the area
+        //add lumpiness to the map
         float noiseResolution = 0.1f;
 
-        //add some randomization for the Perlin noise to make the map generation more "natural", needs more taking look at to work properly and nicely
+        //add some randomization for the Perlin noise to make the map generation more "natural"
+        //TOD: Actually setup the noiseOffset to create randomness in landmasses, does not work well right now
         Vector2 noiseOffset = new Vector2(0, 0);
         //Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f ), Random.Range(0f, 1f));
 
         float noiseScale = 2f; //larger value = more islands and lakes
 
+        //the loop to actually assign the added lumpiness to the map
         for (int column = 0; column < columnCount; column++)
         {
             for (int row = 0; row < rowCount; row++)
@@ -66,21 +67,17 @@ public class HexMap_Continent : HexMap {
 
     private void GenerateMoisture()
     {
-        //TODO: Write code to add moisture
-
-
         //code for randomness of moisture
-        float moistureResolution = 0.1f;
+        float noiseResolution = 0.1f;
 
-        //add some randomization for the Perlin noise to make the map generation more "natural", needs more taking look at to work properly and nicely
-        Vector2 moistureOffset = new Vector2(0, 0);
+        //add some randomization for the Perlin noise to make the map generation more "natural"
+        //TOD: Actually setup the moistureOffset to create randomness in the moisture, does not work well right now
+        Vector2 noiseOffset = new Vector2(0, 0);
         //Vector2 moistureOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
 
         float moistureScale = 0.5f; //larger value = more forrests, lower value = more dessert
 
-
-
-
+        //actual loop for adding the moisture to the area
         for (int column = 0; column < columnCount; column++)
         {
             for (int row = 0; row < rowCount; row++)
@@ -97,14 +94,32 @@ public class HexMap_Continent : HexMap {
                 //Generate the initial moisture
                 h.moisture = Mathf.Lerp(1f, 0f, lerpScale);
          
-                print("row: " + h.R + " collumn: " + h.Q + " moisture: " + h.moisture);
-
-
-                
                 //add some randomness to the moisture
-                float moisture = Mathf.PerlinNoise(((float)column / Mathf.Max(columnCount, rowCount) / moistureResolution) + moistureOffset.x, ((float)row / Mathf.Max(columnCount, rowCount) / moistureResolution)) + moistureOffset.y - 0.5f;
+                float moisture = Mathf.PerlinNoise(((float)column / Mathf.Max(columnCount, rowCount) / noiseResolution) + noiseOffset.x, ((float)row / Mathf.Max(columnCount, rowCount) / noiseResolution)) + noiseOffset.y - 0.5f;
                 h.moisture += moisture * moistureScale;
                 
+            }
+        }
+    }
+
+    //Note: temperature at the moment does not do anything
+    private void GenerateTemperature()
+    {
+
+        //actual loop for adding the temperature to the area
+        for (int column = 0; column < columnCount; column++)
+        {
+            for (int row = 0; row < rowCount; row++)
+            {
+                Hex h = GetHexAt(column, row);
+
+                //create basic strips of temperatures to form our base.
+                //TODO: if possible, simplify the formula to get the lerpscale. Seems unnecesarrily complex right now(but functional)
+                float lerpScale = (((Mathf.Abs(row - (Mathf.Abs((float)rowCount / 2f - (float)rowCount))) / 100f) * (float)rowCount) * 2) / 10 - 1; //lerpscale = 1 means dessert, =0 means forrest
+                lerpScale = Mathf.Abs(lerpScale);
+
+                //Generate the initial temperature
+                h.temperature = Mathf.Lerp(1f, 0f, lerpScale);
             }
         }
     }

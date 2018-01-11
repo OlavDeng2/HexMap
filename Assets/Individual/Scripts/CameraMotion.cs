@@ -19,6 +19,7 @@ public class CameraMotion : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        //set the "old position" of the camera to its current position for later use in CheckIfCameraMoves
         oldPosition = this.transform.position;
 
         //temporarily hard coded for the continents and also temporarily hardcoded multiplyer
@@ -29,8 +30,18 @@ public class CameraMotion : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        MoveCamera();
+        ZoomCamera();
+
+        CheckIfCameraMoved();
+    }
+
+    //Function for moving the camera
+    private void MoveCamera()
+    {
         //TODO: Code to click and drag camera
 
+        //TODO: Limit the movement of the camera up/down and left/right based on if wrapping is allowed in the directions or not
 
         //move the camera with button presses
         if (Input.GetButton("MapUp"))
@@ -41,20 +52,16 @@ public class CameraMotion : MonoBehaviour {
             transform.position -= transform.right * scrollSpeed;
         if (Input.GetButton("MapRight"))
             transform.position += transform.right * scrollSpeed;
+    }
 
+    //Function for zooming in and out camera
+    private void ZoomCamera()
+    {
         // zoom in and out
         if (Input.GetButton("ZoomIn") && transform.position.y >= maxZoomIn)
             transform.position += transform.forward * zoomSpeed;
         if (Input.GetButton("ZoomOut") && transform.position.y <= maxZoomOut)
             transform.position -= transform.forward * zoomSpeed;
-
-
-        CheckIfCameraMoved();
-	}
-
-    public void PanToHex(Hex hex)
-    {
-        //TODO: Move camera to hex
     }
 
     void CheckIfCameraMoved()

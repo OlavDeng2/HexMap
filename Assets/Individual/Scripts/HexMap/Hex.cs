@@ -25,9 +25,9 @@ public class Hex {
     //extra data for potential future use in map generation
     public float elevation;
     public float moisture;
+    public float temperature;
 
     private HexMap hexMap;
-
 
     float radius = 1f;
    

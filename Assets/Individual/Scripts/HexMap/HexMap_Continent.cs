@@ -77,11 +77,6 @@ public class HexMap_Continent : HexMap {
             }
         }
 
-        //Set mesh to mountain/hill/flatt/water based on height
-
-        //Simulate rainfall/moisture and set plains/gresslands + forest
-
-
         UpdateHexVisuals();
     }
 

@@ -146,6 +146,7 @@ MonoBehaviour:
   meshHill: {fileID: 4300000, guid: a83b68aacfb8fde4b8928bb95ed9315e, type: 3}
   meshMountain: {fileID: 4300000, guid: a83b68aacfb8fde4b8928bb95ed9315e, type: 3}
   matOcean: {fileID: 0}
+  matForrest: {fileID: 0}
   matGrasslands: {fileID: 2100000, guid: 46ea34507164eba4aa3176dcafd1de16, type: 2}
   matDessert: {fileID: 0}
   matMountain: {fileID: 2100000, guid: a18070e0b6128504ca954ad1a12e2f12, type: 2}
@@ -189,19 +190,21 @@ MonoBehaviour:
   meshHill: {fileID: 4300000, guid: a83b68aacfb8fde4b8928bb95ed9315e, type: 3}
   meshMountain: {fileID: 4300000, guid: a83b68aacfb8fde4b8928bb95ed9315e, type: 3}
   matOcean: {fileID: 2100000, guid: 46ea34507164eba4aa3176dcafd1de16, type: 2}
+  matForrest: {fileID: 2100000, guid: f1e6b4e5d8b56c54995a3e723e47cbb1, type: 2}
   matGrasslands: {fileID: 2100000, guid: 2874c3d62299425478eecd67d6956977, type: 2}
   matDessert: {fileID: 2100000, guid: 4e8eea0ed3dcb9547ba94b9cadaf5918, type: 2}
   matMountain: {fileID: 2100000, guid: a18070e0b6128504ca954ad1a12e2f12, type: 2}
   mountainHeight: 0.95
   hillHeight: 0.6
   flatHeight: 0
-  forrestMoisture: 1
-  grasslandMoisture: 0.5
+  forrestMoisture: 0.6
+  grasslandMoisture: 0.3
   dessertMoisture: 0
   rowCount: 30
   columnCount: 60
   allowWrapEastWest: 1
   allowWrapNorthSouth: 0
+  numContinents: 2
 --- !u!1 &138292582
 GameObject:
   m_ObjectHideFlags: 0

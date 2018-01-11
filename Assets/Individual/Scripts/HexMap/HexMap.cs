@@ -17,6 +17,7 @@ public class HexMap : MonoBehaviour {
     [Header("Tile Materials")]
     //Materials for our different tiles
     public Material matOcean;
+    public Material matForrest;
     public Material matGrasslands;
     public Material matDessert;
     public Material matMountain;
@@ -122,11 +123,11 @@ public class HexMap : MonoBehaviour {
 
 
                 //Assign the coordinates of the hex
-                hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
+                //hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
                 //Destroy(for now at least) the textmesh if the coordinates is not desirable
-                //TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
-                //Destroy(textMesh);
+                TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
+                Destroy(textMesh);
             }
         }
 
@@ -170,25 +171,25 @@ public class HexMap : MonoBehaviour {
                     mr.material = matOcean;
                 }
 
-
                 //Set the correct tile for different moistures, not most efficient way to do this but whatever.
-                if (h.moisture >= forrestMoisture)
+                if (h.elevation >= flatHeight && h.elevation <= mountainHeight)
                 {
-                    mr.material = matMountain;
+                    
+                    if (h.moisture >= forrestMoisture)
+                    {
+                        mr.material = matForrest;
+                    }
+                    else if (h.moisture >= grasslandMoisture)
+                    {
+                        mr.material = matGrasslands;
+                    }
+                    else if (h.moisture >= dessertMoisture)
+                    {
+                        mr.material = matDessert;
+                    }
                 }
-                else if (h.moisture >= grasslandMoisture)
-                {
-                    //dont have a hill yet so uses grasslands for now
-                    mr.material = matGrasslands;
-                }
-                else if (h.moisture >= dessertMoisture)
-                {
-                    mr.material = matGrasslands;
-                }
-                else
-                {
-                    mr.material = matOcean;
-                }
+                
+                
 
                 //get the mesh for the ocean(water)
                 MeshFilter mf = hexGo.GetComponentInChildren<MeshFilter>();

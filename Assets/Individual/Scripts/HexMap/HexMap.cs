@@ -125,6 +125,7 @@ public class HexMap : MonoBehaviour {
                     hexGo.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
                 }
+                
                 else
                 {
                     //Destroy(for now at least) the textmesh if the coordinates is not desirable
@@ -136,8 +137,6 @@ public class HexMap : MonoBehaviour {
         }
 
         UpdateHexVisuals();
-        //make the tiles non movable(left out for now)
-        //StaticBatchingUtility.Combine(this.gameObject);
     }
 
     //Update the visuals of the tiles

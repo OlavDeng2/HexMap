@@ -132,7 +132,6 @@ public class HexMap : MonoBehaviour {
                     TextMesh textMesh = hexGo.GetComponentInChildren<TextMesh>();
                     Destroy(textMesh);
                 }
-
             }
         }
 
